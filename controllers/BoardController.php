@@ -139,6 +139,7 @@ try {
             $res->result = getApost($vars["no"]);
             // $res->result->comment = getComments($vars["no"]);
             $res->result["comments"] = getComments($vars["no"]);
+            // $res->result["comments"][0]["recomments"] = "뀨";
             // todo: result->comment How?
             // todo: 대댓글 표현 방법
             $res->isSuccess = TRUE;
@@ -155,11 +156,11 @@ try {
         case "showListByBoard":
             $category = $_GET['category'];
             $search = $_GET['search'];
-
+            $last = $_GET['last'];
+            
             http_response_code(200);
-
+            
             if($search){
-                
                 $res->result = searchPost($search);
                 $res->isSuccess = TRUE;
                 $res->code = 290;
@@ -167,7 +168,7 @@ try {
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;
             }
-
+            
             if($category == "hot"){
                 $res->result = getHotBoard();
             }
@@ -175,31 +176,31 @@ try {
                 $res->result = getBestBoard();
             }
             else {
-                $res->result = getPostsByBoard($category);
+                $res->result = getPostsByBoard($category, $last);
             }
             $res->isSuccess = TRUE;
             $res->code = 280;
             $res->message = "$category 게시판 글 조회";
             echo json_encode($res, JSON_NUMERIC_CHECK);
             break;
+            
+            
+            /*
+            * API No. 29
+            * API Name : 글 검색 API
+            * 마지막 수정 날짜 : 20.12.05
+            */
+            case "searchPost":
+                $search = $_GET['search'];
+                http_response_code(200);
+                $res->result = searchPost($search);
+                $res->isSuccess = TRUE;
+                $res->code = 290;
+                $res->message = "글 검색 조회";
+                echo json_encode($res, JSON_NUMERIC_CHECK);
+                break;  
                 
-
-        /*
-         * API No. 29
-         * API Name : 글 검색 API
-         * 마지막 수정 날짜 : 20.12.05
-         */
-        case "searchPost":
-            $search = $_GET['search'];
-            http_response_code(200);
-            $res->result = searchPost($search);
-            $res->isSuccess = TRUE;
-            $res->code = 290;
-            $res->message = "글 검색 조회";
-            echo json_encode($res, JSON_NUMERIC_CHECK);
-            break;  
-
-    }
-} catch (\Exception $e) {
+            }
+        } catch (\Exception $e) {
     return getSQLErrorException($errorLogs, $e, $req);
 }

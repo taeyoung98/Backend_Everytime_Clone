@@ -83,9 +83,9 @@
                     (SELECT type FROM everytime.BoardCategory WHERE no=Board.type) category,
                     title, contents, 
                     (SELECT nickName FROM everytime.User WHERE id=userId) nickName, 
+                    createdAt,
                     (SELECT COUNT(no) FROM everytime.`Like` WHERE boardNo=Board.no) likeCnt, 
-                    (SELECT COUNT(no) FROM everytime.Comment WHERE boardNo=Board.no) commentCnt,
-                    createdAt
+                    (SELECT COUNT(no) FROM everytime.Comment WHERE boardNo=Board.no) commentCnt
                 FROM everytime.Board 
                 WHERE isDeleted='N' and no=?;";
 
@@ -93,14 +93,13 @@
        $st->execute([$no]);
        $st->setFetchMode(PDO::FETCH_ASSOC);
        $res = $st->fetchAll();
-
-       $st = null;
-       $pdo = null;
-
+       $st = null; $pdo = null;
        return $res[0];
    }
 
-    function getPostsByBoard($category){
+    function getPostsByBoard($category, $last){
+       $limit = 3;
+        
        $pdo = pdoSqlConnect();
        $query = "SELECT b.no, bc.type 'category', b.title, b.contents, 
                     (SELECT nickName FROM User WHERE id=b.userId) nickName, 
@@ -108,17 +107,15 @@
                     (SELECT COUNT(no) FROM Comment WHERE boardNo=b.no) commentCnt, 
                     b.createdAt
                 FROM Board AS b, BoardCategory AS bc 
-                WHERE b.type = bc.no AND b.isDeleted='N' AND b.type=(SELECT no FROM BoardCategory WHERE type=?)
-                LIMIT 3;";
+                WHERE b.type = bc.no AND b.isDeleted='N' AND b.type=(SELECT no FROM BoardCategory WHERE type=?) AND b.no < ?
+                ORDER BY createdAt DESC
+                LIMIT $limit;";
 
        $st = $pdo->prepare($query);
-       $st->execute([$category]);
+       $st->execute([$category, $last]);
        $st->setFetchMode(PDO::FETCH_ASSOC);
        $res = $st->fetchAll();
-
-       $st = null;
-       $pdo = null;
-
+       $st = null; $pdo = null;
        return $res;
    }
 
@@ -133,17 +130,13 @@
                 WHERE b.isDeleted='N'
                 GROUP BY l.boardNo
                 HAVING likeCnt > 5
-                ORDER BY b.createdAt DESC
-                LIMIT 3;";
+                ORDER BY b.createdAt DESC;";
 
        $st = $pdo->prepare($query);
        $st->execute();
        $st->setFetchMode(PDO::FETCH_ASSOC);
        $res = $st->fetchAll();
-
-       $st = null;
-       $pdo = null;
-
+       $st = null; $pdo = null;
        return $res;
    }
 
@@ -164,25 +157,22 @@
        $st->execute();
        $st->setFetchMode(PDO::FETCH_ASSOC);
        $res = $st->fetchAll();
-
-       $st = null;
-       $pdo = null;
-
-       return $res;
+       $st = null; $pdo = null;
+        return $res;
    }
 
     function searchPost($search){
        $pdo = pdoSqlConnect();
        $query = "SELECT * FROM everytime.Board 
-                WHERE isDeleted='N' AND title LIKE '%$search%' OR contents LIKE '%$search%';";
+                WHERE isDeleted='N' 
+                    AND title LIKE '%$search%' 
+                    OR contents LIKE '%$search%'
+                ORDER BY createdAt DESC;";
 
        $st = $pdo->prepare($query);
        $st->execute([$category]);
        $st->setFetchMode(PDO::FETCH_ASSOC);
        $res = $st->fetchAll();
-
-       $st = null;
-       $pdo = null;
-
+       $st = null; $pdo = null;
        return $res;
    }

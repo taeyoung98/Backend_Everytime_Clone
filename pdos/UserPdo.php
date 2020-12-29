@@ -130,7 +130,8 @@
             (SELECT COUNT(no) FROM Comment WHERE boardNo=Board.no) commentCnt, 
             createdAt 
         FROM Board 
-        WHERE userId=? AND isDeleted='N';";
+        WHERE userId=? AND isDeleted='N'
+        ORDER BY createdAt DESC;";
 
        $st = $pdo->prepare($query);
        $st->execute([$id]);
@@ -153,7 +154,8 @@
             createdAt  
         FROM Board 
         WHERE no IN (SELECT boardNo FROM Comment WHERE userId=?) 
-            AND isDeleted='N';";
+            AND isDeleted='N'
+        ORDER BY createdAt DESC;";
 
        $st = $pdo->prepare($query);
        $st->execute([$id]);
@@ -176,7 +178,8 @@
             createdAt  
         FROM Board 
         WHERE no IN (SELECT boardNo FROM Scrap WHERE userId=?) 
-            AND isDeleted='N';";
+            AND isDeleted='N'
+        ORDER BY createdAt DESC;";
 
        $st = $pdo->prepare($query);
        $st->execute([$id]);
@@ -190,12 +193,12 @@
 
     function getUsersPerSchool($school){
        $pdo = pdoSqlConnect();
-       $query = "SELECT univ.name 'university', usr.id, usr.name, usr.nickName, usr.stuNum, usr.email
+       $query = "SELECT univ.name 'university', usr.id, usr.name, usr.nickName, usr.stuNo, usr.email
                 FROM User AS usr 
                     RIGHT OUTER JOIN University AS univ 
                     ON usr.university = univ.no
                 WHERE univ.name = ? AND usr.isDeleted = 'N'
-                GROUP BY univ.name, usr.id, usr.name, usr.nickName, usr.stuNum, usr.email;";
+                GROUP BY univ.name, usr.id, usr.name, usr.nickName, usr.stuNo, usr.email;";
 
        $st = $pdo->prepare($query);
        $st->execute([$school]);

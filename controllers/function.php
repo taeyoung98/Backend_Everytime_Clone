@@ -7,6 +7,31 @@ use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
+function getCurrentWeather(){
+    $c = curl_init("https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&appid=a6c23d73fad6694b76e44ee18121fff6");
+    $options = array(
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => true
+    );
+    curl_setopt_array($c, $options);
+    $data = curl_exec($c);
+    curl_close($c);
+
+    if (isset($data) && $data) {
+        $data_obj = json_decode($data);
+        // $result = $data_obj->current;
+        $result = array(
+            'current_temp' => $data_obj->current->temp,
+            'clouds' => $data_obj->current->clouds,
+            'wind speed' => $data_obj->current->wind_speed,
+            'desc' => $data_obj->current->weather[0]->description,
+            'icon' => "http://openweathermap.org/img/w/{$data_obj->current->weather[0]->icon}.png",
+        //     'status' => 'ok'
+        );
+        return $result;
+    }
+}
+
 function getSQLErrorException($errorLogs, $e, $req)
 {
     $res = (Object)Array();

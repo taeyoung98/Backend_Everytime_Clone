@@ -40,11 +40,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('PUT', '/user/password', ['UserController', 'changePassword']);
     $r->addRoute('PUT', '/user/email', ['UserController', 'changeEmail']);
     $r->addRoute('PUT', '/user/nick-name', ['UserController', 'changeNickname']);
-    $r->addRoute('GET', '/my', ['UserController', 'showMyProfile']);
-    $r->addRoute('GET', '/mypost', ['UserController', 'showMyPosts']);
-    $r->addRoute('GET', '/mycommentpost', ['UserController', 'showMyCommentPosts']);
-    $r->addRoute('GET', '/myscrap', ['UserController', 'showMyScraps']);
-    $r->addRoute('GET', '/user', ['UserController', 'showStudentsPerSchool']);
+    $r->addRoute('GET', '/user', ['UserController', 'showMyProfile']);
+    $r->addRoute('GET', '/user/post', ['UserController', 'showMyPosts']);
+    $r->addRoute('GET', '/user/comment-post', ['UserController', 'showMyCommentPosts']);
+    $r->addRoute('GET', '/user/scrap', ['UserController', 'showMyScraps']);
+    $r->addRoute('GET', '/user/univ', ['UserController', 'showStudentsPerSchool']);
 
 
     $r->addRoute('POST', '/board', ['BoardController', 'uploadPost']);
@@ -54,16 +54,18 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('DELETE', '/board/like', ['BoardController', 'likePostOff']);
     $r->addRoute('POST', '/board/scrap', ['BoardController', 'scrapPost']);
     $r->addRoute('DELETE', '/board/scrap', ['BoardController', 'scrapPostOff']);
-    $r->addRoute('GET', '/board/{no}', ['BoardController', 'showApost']);
+    $r->addRoute('GET', '/board/{no:\d+}', ['BoardController', 'showApost']);
     $r->addRoute('GET', '/board', ['BoardController', 'showListByBoard']);
     // $r->addRoute('GET', '/board', ['BoardController', 'searchPost']);
 
 
-    $r->addRoute('GET', '/comment/{no}', ['CommentController', 'showComments']);
+    $r->addRoute('GET', '/comment/{no:\d+}', ['CommentController', 'showComments']);
     $r->addRoute('POST', '/comment', ['CommentController', 'uploadComment']);
     $r->addRoute('DELETE', '/comment', ['CommentController', 'deleteComment']);
     $r->addRoute('POST', '/comment/like', ['CommentController', 'likeComment']);
     $r->addRoute('DELETE', '/comment/like', ['CommentController', 'likeCommentOff']);
+    
+    $r->addRoute('GET', '/weather', ['IndexController', 'weatherAPI']);
 });
 
 // Fetch method and URI from somewhere
