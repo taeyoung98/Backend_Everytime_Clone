@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WEB1 - Welcome</title>
+    <meta charset="utf-8" />
+    <!-- <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous"
+  /> -->
+    <style>
+      .input-group {
+        margin: 10px 0px 10px 0px;
+      }
+      .input-group label {
+        display: block;
+        text-align: left;
+        margin: 3px;
+      }
+      .input-group input {
+        height: 30px;
+        width: 300px;
+        padding: 5px 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid gray;
+      }
+      .btn {
+        padding: 10px;
+        font-size: 15px;
+        color: white;
+        background: #5f9ea0;
+        border: none;
+        border-radius: 5px;
+      }
+      .input-group input {
+        border: none;
+        border-bottom: 1px solid grey;
+        border-radius: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>PHP REST API MySQL AJAX jQuery CRUD</h2>
+
+    <h3>Add a New Company</h3>
+    <div class="input-group">
+      <label>No &emsp; <input type="number" id="no" value="" required /></label>
+      <label>Title&emsp;<input type="text" id="title" name="title" value="" required /></label>
+      <label>Name <input type="text" id="name" value="" required /></label>
+    </div>
+    <div class="input-group">
+      <button class="btn" type="button" id="addNew">Save</button>
+    </div>
+
+    <p />
+
+    <table border="1" cellspacing="0" cellpadding="5">
+      <tr>
+        <th>no</th>
+        <th>title</th>
+        <th>name</th>
+        <th>actions</th>
+      </tr>
+    </table>
+
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script>
+      $.ajax({
+        url: "http://3.131.139.139/board/all",
+        type: "get",
+      }).done(function (data) {
+        var tmp = data.result;
+        $("#name").text(tmp);
+        console.log(data["result"][0]);
+      });
+
+      $(document).ready(function () {
+        $.getJSON("http://3.131.139.139/board/all", function (json) {
+          var json = json["result"];
+          console.log(json);
+          console.log(json[0].no);
+
+          var tr = [];
+          for (var i = 0; i < json.length; i++) {
+            tr.push("<tr>");
+            tr.push("<td>" + json[i].no + "</td>");
+            tr.push("<td>" + json[i].title + "</td>");
+            tr.push("<td>" + json[i].nickName + "</td>");
+            tr.push("<td><button class='edit'>Edit</button>&nbsp;&nbsp;<button class='delete' id=" + json[i].id + ">Delete</button></td>");
+            tr.push("</tr>");
+          }
+          $("table").append($(tr.join("")));
+        });
+
+        $(document).on("click", "#addNew", function (event) {
+          event.preventDefault();
+
+          var no = $("#no").val();
+          var title = $("#title").val();
+          var name = $("#name").val();
+
+          if (title == null || title == "" || no == null || no == "" || name == null || name == "") {
+            alert("all <input>s are required");
+            return;
+          }
+
+          var tr = [];
+          tr.push("<tr>");
+          tr.push("<td>" + no + "</td>");
+          tr.push("<td>" + title + "</td>");
+          tr.push("<td>" + name + "</td>");
+          tr.push("<td><button class='edit'>Edit</button>&nbsp;&nbsp;<button class='delete' id=" + no + ">Delete</button></td>");
+          tr.push("</tr>");
+          $("table").append($(tr.join("")));
+
+          $("#no").val("");
+          $("#title").val("");
+          $("#name").val("");
+
+          // $.ajax({
+          //   type: "POST",
+          //   contentType: "application/json; charset=utf-8",
+          //   url: "http://localhost/php-ajax-jquery-mysql-crud/create.php",
+          //   data: JSON.stringify({ name: title }),
+          //   cache: false,
+          //   success: function (result) {
+          //     alert("Company added successfully");
+          //     location.reload(true);
+          //   },
+          //   error: function (err) {
+          //     alert(err);
+          //   },
+          // });
+        });
+
+        $(document).on("click", ".delete", function () {
+          if (confirm("Do you really want to delete record?")) {
+            var id = $(this).attr("id");
+            var parent = $(this).parent().parent();
+
+            parent.fadeOut("slow", function () {
+              $(this).remove();
+            });
+          }
+        });
+
+        $(document).on("click", ".edit", function () {
+          var parent = $(this).parent().parent();
+
+          var no = parent.children("td:nth-child(1)");
+          var title = parent.children("td:nth-child(2)");
+          var name = parent.children("td:nth-child(3)");
+          var buttons = parent.children("td:nth-child(4)");
+
+          title.html("<input type='text' id='txtTitle' value='" + title.html() + "'/>");
+          name.html("<input type='text' id='txtName' value='" + name.html() + "'/>");
+          buttons.html("<button id='save'>Save</button>&nbsp;&nbsp;<button class='delete' id='" + no.html() + "'>Delete</button>");
+        });
+
+        $(document).on("click", "#save", function () {
+          var parent = $(this).parent().parent();
+
+          var no = parent.children("td:nth-child(1)");
+          var title = parent.children("td:nth-child(2)");
+          var name = parent.children("td:nth-child(3)");
+          var buttons = parent.children("td:nth-child(4)");
+
+          title.html(title.children("input[type=text]").val());
+          name.html(name.children("input[type=text]").val());
+          buttons.html(
+            "<button class='edit' id='" +
+              no.html() +
+              "'>Edit</button>&nbsp;&nbsp;<button class='delete' id='" +
+              no.html() +
+              "'>Delete</button>"
+          );
+        });
+
+        $(document).on("click", "table", function () {
+          var parent = $(this).parent().parent();
+          alert(hello);
+        });
+      });
+    </script>
+  </body>
+</html>

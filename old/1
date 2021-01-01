@@ -1,0 +1,10 @@
+<div class="card" style="width: 25rem;">
+  <div class="card-body">
+    <h5 class="card-title">Mark Otto</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+    <p class="card-text">
+        HTML elements are the building blocks of HTML pages. With HTML constructs, images and other objects, such as interactive forms, may be embedded into the rendered page. It provides a means to create structured documents by denoting structural semantics for text such as headings, paragraphs, lists, links, quotes and other items. HTML elements are delineated by tags, written using angle brackets.
+    </p>
+    <a href="#" class="card-link">@mdo</a>
+  </div>
+</div>
