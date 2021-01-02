@@ -23,4 +23,8 @@
 - [x] 보완) user URI restful하게 수정, 로그아웃 api delete
 - [x] 프로드서버, 테스트 서버 분리해서 구축
 - [ ] ERD 설계 유튜브
-- [ ] third party api 실습 해보기
+
+## 10th Missions
+
+- [x] third party api 실습 해보기 (Open Weather API)
+- [x] AWS RDS
