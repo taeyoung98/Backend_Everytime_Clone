@@ -1,5 +1,12 @@
 # Everytime Restful API
 
+## 사용 스택
+- AWS LEMP server (putty)
+- PHP Framework
+- HTTP Rest API
+- AWS RDS MySQL 
+- Ajax
+
 ## 8th Missions
 
 - [x] 보완) 공백 체크
