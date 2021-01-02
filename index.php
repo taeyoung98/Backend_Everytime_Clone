@@ -56,7 +56,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('DELETE', '/board/scrap', ['BoardController', 'scrapPostOff']);
     $r->addRoute('GET', '/board/{no:\d+}', ['BoardController', 'showApost']);
     $r->addRoute('GET', '/board', ['BoardController', 'showListByBoard']);
-    // $r->addRoute('GET', '/board', ['BoardController', 'searchPost']);
+    $r->addRoute('GET', '/board/all', ['BoardController', 'showAllPosts']);
 
 
     $r->addRoute('GET', '/comment/{no:\d+}', ['CommentController', 'showComments']);

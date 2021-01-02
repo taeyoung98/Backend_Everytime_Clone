@@ -187,16 +187,15 @@ try {
             
             /*
             * API No. 29
-            * API Name : 글 검색 API
-            * 마지막 수정 날짜 : 20.12.05
+            * API Name : 전체글 조회 API
+            * 마지막 수정 날짜 : 20.12.30
             */
-            case "searchPost":
-                $search = $_GET['search'];
+            case "showAllPosts":
                 http_response_code(200);
-                $res->result = searchPost($search);
+                $res->result = getAllPosts();
                 $res->isSuccess = TRUE;
                 $res->code = 290;
-                $res->message = "글 검색 조회";
+                $res->message = " 전체글 조회";
                 echo json_encode($res, JSON_NUMERIC_CHECK);
                 break;  
                 

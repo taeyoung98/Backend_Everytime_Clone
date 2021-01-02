@@ -176,3 +176,21 @@
        $st = null; $pdo = null;
        return $res;
    }
+
+       function getAllPosts(){
+       $pdo = pdoSqlConnect();
+       $query = "SELECT b.no, bc.type, b.title, b.contents, 
+                    (SELECT nickName FROM User WHERE id=b.userId) nickName,  
+                    (SELECT COUNT(no) FROM `Like` WHERE boardNo=b.no) likeCnt, 
+                    (SELECT COUNT(no) FROM Comment WHERE boardNo=b.no) commentCnt, 
+                    b.createdAt
+                FROM Board AS b, BoardCategory AS bc 
+                WHERE b.type = bc.no AND b.isDeleted='N';";
+
+       $st = $pdo->prepare($query);
+       $st->execute();
+       $st->setFetchMode(PDO::FETCH_ASSOC);
+       $res = $st->fetchAll();
+       $st = null; $pdo = null;
+       return $res;
+   }
